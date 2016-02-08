@@ -1,0 +1,12 @@
+﻿@model IEnumerable<MvcPL.ViewModels.UserViewModel>
+
+<div class="all-users">
+    <div class="h2">Users</div>
+    <hr />
+    @foreach (var item in Model)
+    {
+        <div class="user">
+            @Html.ActionLink(item.Name, "UserInfo", new { Name = item.Name })
+        </div>
+    }
+</div>

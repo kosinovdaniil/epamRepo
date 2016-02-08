@@ -1,0 +1,79 @@
+﻿@model MvcPL.ViewModels.ContentViewModel
+@using System.Security.Claims;
+@{
+    ViewBag.Title = "Content";
+}
+
+<div class="h1">Content</div>
+
+<fieldset>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+    @Video.MediaPlayer(path: Model.UrlToContent, width: "650", height: "400", autoStart: false, playCount: 1)
+    <div class="col-md-12">
+        <div class="display-field">
+            @Html.ActionLink(Model.User.Name, "UserInfo", "Home", new { name = Model.User.Name }, null)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Date)
+        </div>
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Description)
+    </div>
+
+    <div class="display-field" id="rating">
+        @Html.DisplayFor(model => model.Rating)
+    </div>
+    <div id="voting">
+        @if (!ViewBag.IsUserVoted)
+        {<div class="h3">
+            @Ajax.ActionLink("+", "Like", new { id = Model.Id }, new AjaxOptions()
+       {
+           HttpMethod = "POST",
+           UpdateTargetId = "rating",
+           InsertionMode = InsertionMode.Replace
+       })
+
+            @Ajax.ActionLink("-", "Dislike", new { id = Model.Id }, new AjaxOptions()
+       {
+           HttpMethod = "POST",
+           UpdateTargetId = "rating",
+           InsertionMode = InsertionMode.Replace
+       })
+        </div>
+        }
+    </div>
+
+</fieldset>
+<p>
+    @if (Model.User.Name == User.Identity.Name || ((ClaimsIdentity)User.Identity).Claims
+                                      .Any(x => x.Type == ClaimTypes.Role && (x.Value == "Admin" || x.Value == "Moderator")))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+    }
+    <div id="noscript-hide1">
+
+        @if (User.Identity.IsAuthenticated)
+        {
+
+            using (Ajax.BeginForm("CreateComment", new AjaxOptions
+            {
+                UpdateTargetId = "addCommentResponse",
+                HttpMethod = "POST",
+                InsertionMode = InsertionMode.Replace
+            }))
+            {
+                @Html.TextArea("commentText");
+                @Html.Hidden("contentId", Model.Id)
+
+                <input type="submit" value="Add Comment" />
+            }
+        }
+    </div>
+
+    <div id="addCommentResponse">@Html.Partial("_Comments", Model.Comments)</div>
+
+
+</p>

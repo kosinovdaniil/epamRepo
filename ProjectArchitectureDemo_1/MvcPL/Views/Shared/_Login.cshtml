@@ -1,0 +1,59 @@
+﻿@model MvcPL.ViewModels.UserLoginModel
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="col-md-6">
+        <p>Hello, @Html.ActionLink(User.Identity.Name, "UserInfo", new { name = User.Identity.Name })</p>
+    </div>
+    <div class="col-md-6">
+        @Html.ActionLink("LogOut", "LogOut", "Account");
+    </div>
+}
+else {
+    using (Html.BeginForm("LogOn", "Account"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <div></div>
+        <div class="col-md-3">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Name)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="editor-label ">
+                @Html.LabelFor(model => model.Password)
+            </div>
+            <div class="editor-field">
+                @Html.PasswordFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+            </div>
+        </div>
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.RememberMe)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.RememberMe)
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="btn">
+                    <input type="submit" value="LogOn" />
+                </div>
+                <div class="btn">
+                    @Html.ActionLink("Register", "Register", "Account")
+                </div>
+                @TempData["Error"]
+            </div>
+
+
+
+    }
+}
+

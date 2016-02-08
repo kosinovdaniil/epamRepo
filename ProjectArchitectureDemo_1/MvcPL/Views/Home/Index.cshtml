@@ -1,0 +1,30 @@
+﻿@using Microsoft.Web.Helpers;
+@model IEnumerable<MvcPL.ViewModels.ContentViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@foreach (var item in Model)
+{
+    <div class="modal-title">
+        @Html.ActionLink(item.Name, "Content", new { id = item.Id })
+    </div>
+    <div class="modal-title">
+        @Html.DisplayFor(modelItem => item.Date)
+
+
+        Rating = @Html.DisplayFor(modelItem => item.Rating)
+    </div>
+
+        @Video.MediaPlayer(path: item.UrlToContent, width: "400", height: "200", autoStart: false, playCount: 1)
+
+
+
+}
+@if (User.Identity.IsAuthenticated)
+{
+    @Html.ActionLink("Create new post", "CreateContent")
+}
+
+

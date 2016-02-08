@@ -1,0 +1,48 @@
+﻿@model MvcPL.ViewModels.UserViewModel
+@using MvcPL.ViewModels
+@using System.Security.Claims
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm("Edit", "Account"))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>UserViewModel</legend>
+
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.Roles)
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Name)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+            @if (((ClaimsIdentity)User.Identity).Claims
+                            .Any(x => x.Type == ClaimTypes.Role &&
+                            x.Value == "Admin"))
+            {
+                List<RoleViewModel> roles = ViewBag.Roles;
+                foreach (var role in roles)
+                {
+                    <div>
+                        <input type="checkbox"
+                               name="selectedRoles"
+                               value="@role.Id"
+                               @(Html.Raw(role.IsAssigned ? "checked=\"checked\"" : "")) />
+                        @role.Name
+                    </div>
+                }
+                @Html.ActionLink("Delete", "Delete", new { Id = Model.Id})
+            }
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        </fieldset>
+}

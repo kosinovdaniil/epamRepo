@@ -1,0 +1,34 @@
+﻿@model IEnumerable<MvcPL.ViewModels.CommentViewModel>
+@using System.Security.Claims
+<div id="to-update">
+    @foreach (var comment in Model)
+    {
+        <div>
+            @comment.Date.ToString()
+            @Html.ActionLink(@comment.User.Name, "UserInfo", new { Id = comment.User.Id, Name = comment.User.Name })
+            <div id="edit-@comment.Id.ToString()">
+                @comment.Text
+            </div>
+
+                @if (User.Identity.IsAuthenticated && (User.Identity.Name == comment.User.Name) || ((ClaimsIdentity)User.Identity).Claims
+                                                                    .Any(x => x.Type == ClaimTypes.Role && (x.Value == "Admin" || x.Value == "Moderator")))
+                {
+                    @Ajax.ActionLink("Delete", "DeleteComment", new { Id = comment.Id },
+                    new AjaxOptions()
+                    {
+                        Confirm = "Are you sure you want to delete?",
+                        HttpMethod = "POST",
+                        UpdateTargetId = "to-update",
+                        InsertionMode = InsertionMode.Replace
+                    })
+                    @Ajax.ActionLink("Edit", "EditComment", new { Id = comment.Id },
+                    new AjaxOptions()
+                    {
+                        HttpMethod = "GET",
+                        UpdateTargetId = "edit-"+@comment.Id.ToString(),
+                        InsertionMode = InsertionMode.Replace
+                    })
+                }
+        </div>
+    }
+</div>

@@ -1,0 +1,48 @@
+﻿@model MvcPL.ViewModels.UserRegisterModel
+
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2>Register</h2>
+
+@using (Html.BeginForm("Register","Account")) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>UserRegisterModel</legend>
+        <div>@ViewBag.Error</div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Name)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Password)
+        </div>
+        <div class="editor-field">
+            @Html.PasswordFor(model => model.Password)
+            @Html.ValidationMessageFor(model => model.Password)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PasswordConfirm)
+        </div>
+        <div class="editor-field">
+            @Html.PasswordFor(model => model.PasswordConfirm)
+            @Html.ValidationMessageFor(model => model.PasswordConfirm)
+        </div>
+
+        <p>
+            <input type="submit" value="Register" />
+        </p>
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

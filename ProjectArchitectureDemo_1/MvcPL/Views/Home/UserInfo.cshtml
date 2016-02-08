@@ -1,0 +1,58 @@
+﻿@model MvcPL.ViewModels.UserViewModel
+@using System.Security.Claims;
+@{
+    ViewBag.Title = "UserInfo";
+}
+
+<h2>UserInfo</h2>
+
+<fieldset>
+    <div class="display-label">
+        @Html.DisplayNameFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+        @Html.DisplayNameFor(model => model.AmountOfPublications)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.AmountOfPublications)
+    </div>
+
+    <div class="display-label">
+        @Html.DisplayNameFor(model => model.AverageRating)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.AverageRating)
+    </div>
+    <div class="display-label">
+        Roles:
+    </div>
+    @foreach (var role in Model.Roles)
+    {
+        <div class="display-field">
+            @role.Name
+        </div>
+    }
+    <div class="display-label">
+        Videos:
+    </div>
+    @foreach (var post in Model.Publications)
+    {
+        <div class="display-field">
+            @Html.ActionLink(post.Name, "Content", new { id = post.Id })
+        </div>
+    }
+
+</fieldset>
+<p>
+    @if (((ClaimsIdentity)User.Identity).Claims
+                                                            .Any(x => x.Type == ClaimTypes.Role &&
+                                                            x.Value == "Admin") || User.Identity.Name == Model.Name)
+    {
+        @Html.ActionLink("Edit", "Edit", "Account", new { id = Model.Id }, null);
+    }
+
+</p>
